@@ -32,11 +32,25 @@ app.post("/remove-bg", upload.single("image"), async (req, res) => {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("AI processing failed");
+    // IMPORTANT FIX
+    const contentType = response.headers.get("content-type");
+
+    if (!contentType || !contentType.includes("image")) {
+
+      const errorText = await response.text();
+
+      console.log(errorText);
+
+      return res.status(500).json({
+        error: "AI model failed",
+        details: errorText
+      });
+
     }
 
-    const outputBuffer = Buffer.from(await response.arrayBuffer());
+    const arrayBuffer = await response.arrayBuffer();
+
+    const outputBuffer = Buffer.from(arrayBuffer);
 
     res.set("Content-Type", "image/png");
 
