@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import fs from "fs";
-import { removeBackground } from "rembg-node";
 
 const app = express();
 
@@ -13,20 +12,32 @@ const upload = multer({
   dest: "uploads/"
 });
 
+const HF_TOKEN = process.env.HF_TOKEN;
+
 app.post("/remove-bg", upload.single("image"), async (req, res) => {
 
   try {
 
-    const inputPath = req.file.path;
+    const imageBuffer = fs.readFileSync(req.file.path);
 
-    const inputBuffer = fs.readFileSync(inputPath);
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/briaai/RMBG-1.4",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${HF_TOKEN}`,
+          "Content-Type": "application/octet-stream"
+        },
+        body: imageBuffer
+      }
+    );
 
-    // AI Background Removal
-    const outputBuffer = await removeBackground(inputBuffer);
+    if (!response.ok) {
+      throw new Error("AI processing failed");
+    }
 
-    fs.unlinkSync(inputPath);
+    const outputBuffer = Buffer.from(await response.arrayBuffer());
 
-    // IMPORTANT
     res.set("Content-Type", "image/png");
 
     res.send(outputBuffer);
@@ -36,7 +47,6 @@ app.post("/remove-bg", upload.single("image"), async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      success: false,
       error: "Background removal failed"
     });
 
