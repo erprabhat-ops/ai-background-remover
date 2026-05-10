@@ -95,3 +95,4 @@ newBtn.addEventListener("click", () => {
   beforeImage.src = "";
   afterImage.src = "";
 });
+
