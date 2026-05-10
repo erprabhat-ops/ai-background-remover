@@ -2,12 +2,7 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { removeBackground } from "@imgly/background-removal-node";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { removeBackground } from "rembg-node";
 
 const app = express();
 
@@ -19,33 +14,38 @@ const upload = multer({
 });
 
 app.post("/remove-bg", upload.single("image"), async (req, res) => {
+
   try {
+
     const inputPath = req.file.path;
 
-    const imageBuffer = fs.readFileSync(inputPath);
+    const inputBuffer = fs.readFileSync(inputPath);
 
-    // Remove background
-    const blob = await removeBackground(imageBuffer);
-
-    const arrayBuffer = await blob.arrayBuffer();
-
-    const outputBuffer = Buffer.from(arrayBuffer);
+    // AI Background Removal
+    const outputBuffer = await removeBackground(inputBuffer);
 
     fs.unlinkSync(inputPath);
 
-    res.setHeader("Content-Type", "image/png");
+    // IMPORTANT
+    res.set("Content-Type", "image/png");
+
     res.send(outputBuffer);
 
   } catch (error) {
+
     console.error(error);
+
     res.status(500).json({
+      success: false,
       error: "Background removal failed"
     });
+
   }
+
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log("Server running...");
 });
