@@ -1,0 +1,153 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  background:#07070d;
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.bg-glow{
+  position:fixed;
+  width:500px;
+  height:500px;
+  background:linear-gradient(
+    45deg,
+    #6d5dfc,
+    #00bfff
+  );
+  filter:blur(150px);
+  opacity:.25;
+  top:-100px;
+  left:-100px;
+  z-index:-1;
+}
+
+.hero{
+  text-align:center;
+  padding:100px 20px;
+}
+
+.hero h1{
+  font-size:3rem;
+  margin-bottom:20px;
+}
+
+.hero p{
+  opacity:.7;
+  margin-bottom:30px;
+}
+
+button{
+  border:none;
+  padding:14px 24px;
+  border-radius:16px;
+  cursor:pointer;
+  background:linear-gradient(
+    90deg,
+    #7f5cff,
+    #00bfff
+  );
+  color:white;
+  font-weight:bold;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+.upload-card{
+  width:90%;
+  max-width:700px;
+  margin:auto;
+  padding:60px;
+  border:2px dashed rgba(255,255,255,.2);
+  border-radius:24px;
+  text-align:center;
+  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,.05);
+}
+
+.loader{
+  text-align:center;
+  margin-top:40px;
+}
+
+.spinner{
+  width:60px;
+  height:60px;
+  border:5px solid rgba(255,255,255,.1);
+  border-top:5px solid #7f5cff;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.hidden{
+  display:none;
+}
+
+.result{
+  width:90%;
+  max-width:900px;
+  margin:50px auto;
+  text-align:center;
+}
+
+.comparison{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.comparison img{
+  width:100%;
+  border-radius:20px;
+  background:url(
+    "https://www.transparenttextures.com/patterns/checkered-pattern.png"
+  );
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  padding:80px 20px;
+}
+
+.feature-card{
+  padding:30px;
+  border-radius:24px;
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(20px);
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  opacity:.5;
+}
+
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:2rem;
+  }
+
+  .comparison{
+    grid-template-columns:1fr;
+  }
+
+}

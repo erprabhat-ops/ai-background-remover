@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroCut AI</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<header class="hero">
+  <h1>Remove Backgrounds Instantly</h1>
+  <p>Premium AI-powered background remover with ultra clean results.</p>
+
+  <button id="uploadBtn">Upload Image</button>
+
+  <input type="file" id="fileInput" hidden accept="image/*"/>
+</header>
+
+<section class="upload-card" id="dropArea">
+  <p>Drag & Drop Image Here</p>
+</section>
+
+<section class="loader hidden" id="loader">
+  <div class="spinner"></div>
+  <p>AI Processing...</p>
+</section>
+
+<section class="result hidden" id="resultSection">
+
+  <div class="comparison">
+    <img id="beforeImage"/>
+    <img id="afterImage"/>
+  </div>
+
+  <button id="downloadBtn">
+    Download PNG
+  </button>
+
+</section>
+
+<section class="features">
+
+  <div class="feature-card">
+    <h3>HD Quality</h3>
+    <p>Sharp AI background removal.</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>Fast Processing</h3>
+    <p>Optimized AI speed.</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>Privacy Focused</h3>
+    <p>Your images stay secure.</p>
+  </div>
+
+</section>
+
+<footer>
+  <p>© 2026 NeuroCut AI</p>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
