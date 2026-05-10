@@ -30,11 +30,22 @@ fileInput.addEventListener("change", async (e) => {
   try{
 
     const response = await fetch("/remove-bg", {
-      method:"POST",
-      body:formData
-    });
+  method: "POST",
+  body: formData
+});
 
-    const blob = await response.blob();
+if (!response.ok) {
+
+  const errorData = await response.json();
+
+  alert(errorData.details || "AI failed");
+
+  loader.classList.add("hidden");
+
+  return;
+}
+
+const blob = await response.blob();
 
     outputBlob = blob;
 
