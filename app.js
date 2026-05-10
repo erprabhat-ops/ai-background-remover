@@ -1,16 +1,15 @@
-// ── NeuroCut AI — Browser-only Background Remover ──
-// Uses @imgly/background-removal (browser build) via CDN
-// No server, no backend, 100% free
+// ── NeuroCut AI — Background Remover ──
+// Library loads via <script> tag in index.html
+// removeBackground comes from window scope via UMD build
 
-const fileInput    = document.getElementById("fileInput");
-const uploadLabel  = document.getElementById("uploadLabel");
-const dropArea     = document.getElementById("dropArea");
-const loader       = document.getElementById("loader");
-const resultSection= document.getElementById("resultSection");
-const beforeImage  = document.getElementById("beforeImage");
-const afterImage   = document.getElementById("afterImage");
-const downloadBtn  = document.getElementById("downloadBtn");
-const newBtn       = document.getElementById("newBtn");
+const fileInput     = document.getElementById("fileInput");
+const dropArea      = document.getElementById("dropArea");
+const loader        = document.getElementById("loader");
+const resultSection = document.getElementById("resultSection");
+const beforeImage   = document.getElementById("beforeImage");
+const afterImage    = document.getElementById("afterImage");
+const downloadBtn   = document.getElementById("downloadBtn");
+const newBtn        = document.getElementById("newBtn");
 
 let outputBlob = null;
 
@@ -35,25 +34,20 @@ dropArea.addEventListener("drop", (e) => {
   if (file && file.type.startsWith("image/")) processImage(file);
 });
 
-// ── Main Processing Function ──
+// ── Main Processing ──
 async function processImage(file) {
-  // Show before image
   beforeImage.src = URL.createObjectURL(file);
-
-  // Show loader, hide others
   dropArea.classList.add("hidden");
   resultSection.classList.add("hidden");
   loader.classList.remove("hidden");
 
   try {
-    // Convert file to blob URL for the library
     const imgUrl = URL.createObjectURL(file);
 
-    // imglyRemoveBackground is loaded from CDN script tag
-    // It runs entirely in the browser using WebAssembly
-    const resultBlob = await imglyRemoveBackground(imgUrl, {
-      publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser/",
-      model: "small", // 'small' = faster, 'medium' = better quality
+    // backgroundRemoval is the global from the UMD CDN script
+    const resultBlob = await backgroundRemoval.removeBackground(imgUrl, {
+      publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/",
+      model: "small",
       output: {
         format: "image/png",
         quality: 1,
@@ -63,17 +57,14 @@ async function processImage(file) {
     outputBlob = resultBlob;
     afterImage.src = URL.createObjectURL(resultBlob);
 
-    // Show result
     loader.classList.add("hidden");
     resultSection.classList.remove("hidden");
 
   } catch (err) {
-    console.error("Background removal failed:", err);
+    console.error("Error:", err);
     loader.classList.add("hidden");
     dropArea.classList.remove("hidden");
-
-    // User-friendly error
-    alert("⚠️ Kuch gadbad ho gayi!\n\nDobara try karo ya koi doosri image use karo.\n\nError: " + err.message);
+    alert("⚠️ Error: " + err.message + "\n\nDobara try karo.");
   }
 }
 
@@ -82,11 +73,11 @@ downloadBtn.addEventListener("click", () => {
   if (!outputBlob) return;
   const a = document.createElement("a");
   a.href = URL.createObjectURL(outputBlob);
-  a.download = "neurocut-removed-bg.png";
+  a.download = "neurocut-bg-removed.png";
   a.click();
 });
 
-// ── Upload New ──
+// ── New Image ──
 newBtn.addEventListener("click", () => {
   resultSection.classList.add("hidden");
   dropArea.classList.remove("hidden");
@@ -95,4 +86,3 @@ newBtn.addEventListener("click", () => {
   beforeImage.src = "";
   afterImage.src = "";
 });
-
